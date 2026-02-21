@@ -10,10 +10,8 @@ import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.network.protocol.game.ClientboundLightUpdatePacketData;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LightLayer;
-
 import net.minecraft.world.level.chunk.DataLayer;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,7 +39,7 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
      */
 
     @Shadow
-    protected abstract void applyLightData(final int chunkX, final int chunkZ, final ClientboundLightUpdatePacketData clientboundLightUpdatePacketData);
+    protected abstract void applyLightData(final int chunkX, final int chunkZ, final ClientboundLightUpdatePacketData clientboundLightUpdatePacketData, final boolean bl);
 
     @Shadow
     protected abstract void enableChunkLight(final LevelChunk levelChunk, final int chunkX, final int chunkZ);
@@ -77,7 +75,6 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
                                    final @Nullable DataLayer nibble) {
         ((StarLightLightingProvider)this.level.getChunkSource().getLightEngine()).clientUpdateLight(lightType, pos, nibble, true);
     }
-
 
     /**
      * Avoid calling Vanilla's logic here, and instead call our own.
@@ -122,13 +119,13 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
     private void postChunkLoadHook(final ClientboundLevelChunkWithLightPacket clientboundLevelChunkWithLightPacket, final CallbackInfo ci) {
         final int chunkX = clientboundLevelChunkWithLightPacket.getX();
         final int chunkZ = clientboundLevelChunkWithLightPacket.getZ();
-        final LevelChunk chunk = this.level.getChunkSource().getChunk(chunkX, chunkZ, ChunkStatus.FULL, false);
+        final LevelChunk chunk = this.level.getChunkSource().getChunk(chunkX, chunkZ, false);
         if (chunk == null) {
             // failed to load
             return;
         }
         // load in light data from packet immediately
-        this.applyLightData(chunkX, chunkZ, clientboundLevelChunkWithLightPacket.getLightData());
+        this.applyLightData(chunkX, chunkZ, clientboundLevelChunkWithLightPacket.getLightData(), false);
         ((StarLightLightingProvider)this.level.getChunkSource().getLightEngine()).clientChunkLoad(new ChunkPos(chunkX, chunkZ), chunk);
 
         // we need this for the update chunk status call, so that it can tell starlight what sections are empty and such

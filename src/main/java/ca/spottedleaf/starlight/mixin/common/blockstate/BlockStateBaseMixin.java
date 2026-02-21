@@ -44,14 +44,14 @@ public abstract class BlockStateBaseMixin extends StateHolder<Block, BlockState>
         /**
          * Initialises our light state for this block.
          */
-    @Inject(
-            method = "initCache",
-            at = @At("RETURN")
-    )
-    public void initLightAccessState(final CallbackInfo ci) {
-        this.isConditionallyFullOpaque = this.canOcclude & this.useShapeForLightOcclusion;
-        this.opacityIfCached = this.cache == null || this.isConditionallyFullOpaque ? -1 : this.cache.lightBlock;
-    }
+        @Inject(
+                method = "initCache",
+                at = @At("RETURN")
+        )
+        public void initLightAccessState(final CallbackInfo ci) {
+            this.isConditionallyFullOpaque = this.canOcclude & this.useShapeForLightOcclusion;
+            this.opacityIfCached = this.cache == null || this.isConditionallyFullOpaque ? -1 : ((BlockState)(Object)this).getLightBlock();
+        }
 
     @Override
     public final boolean isConditionallyFullOpaque() {
