@@ -1,6 +1,6 @@
 # Starlight Reloaded (Fabric)
 
-An unofficial port of [Starlight](https://github.com/PaperMC/Starlight) to Minecraft 1.21.1 Fabric.
+An unofficial port of [Starlight](https://github.com/PaperMC/Starlight) to Minecraft 1.21.4 Fabric.
 
 Starlight is a mod that completely rewrites the vanilla light engine to provide
 significantly improved performance.
@@ -48,7 +48,7 @@ For detailed benchmarks from the original project, see
 
 - **[Spottedleaf](https://github.com/Spottedleaf)** — original author of
   Starlight
-- **[1Influence](https://github.com/Influenze0)** — port to 1.21.1
+- **[1Influence](https://github.com/Influenze0)** — port to 1.21.4
 
 ## License
 
